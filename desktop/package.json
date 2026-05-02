@@ -1,0 +1,63 @@
+{
+  "name": "keyboard-analyzer",
+  "version": "1.0.0",
+  "description": "Keyboard Analyzer — Real-time typing speed and accuracy tracker",
+  "main": "main.js",
+  "author": "Shlok",
+  "license": "ISC",
+  "type": "commonjs",
+
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+
+  "devDependencies": {
+    "electron": "^41.4.0",
+    "electron-builder": "^26.8.1"
+  },
+
+  "build": {
+    "appId": "com.shlok.keyboard-analyzer",
+    "productName": "Keyboard Analyzer",
+
+    "directories": {
+      "output": "release"
+    },
+
+    "files": [
+      "main.js"
+    ],
+
+    "extraResources": [
+      {
+        "from": "../dist",
+        "to": "backend",
+        "filter": ["**/*"]
+      },
+      {
+        "from": "../ui/dist",
+        "to": "ui",
+        "filter": ["**/*"]
+      },
+      {
+        "from": "icon.png",
+        "to": "icon.png"
+      }
+    ],
+
+    "win": {
+      "target": "nsis",
+      "icon": "icon.png"
+    },
+
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Keyboard Analyzer"
+    }
+  }
+}

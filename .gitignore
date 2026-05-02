@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+desktop/release/
+desktop/release-builds/
+ui/dist/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.spec
+
+# Database
+*.db
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Electron
+*.blockmap

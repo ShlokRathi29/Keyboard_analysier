@@ -1,4 +1,4 @@
-# ⌨️ Keyboard Analyzer
+# Keyboard Analyzer
 
 A sleek desktop application that runs silently in the background, tracking your real-time typing speed (WPM), accuracy, error rate, and most-used keys.
 
@@ -8,7 +8,7 @@ A sleek desktop application that runs silently in the background, tracking your 
 
 ---
 
-## ✨ Features
+##  Features
 
 - **Real-time WPM tracking** — see your typing speed update live
 - **Accuracy & Error Rate** — calculated from backspace usage
@@ -16,13 +16,12 @@ A sleek desktop application that runs silently in the background, tracking your 
 - **System Tray** — runs silently in the background, minimizes to tray on close
 - **Session Duration** — tracks how long you've been typing
 - **One-click Reset** — clear all data and start fresh
-- **Premium Dark UI** — glassmorphism design with gradient animations
 
 ---
 
-## 🚀 Quick Install (For Users)
+##  Quick Install (For Users)
 
-> **No coding knowledge needed. Just download and run.**
+> **Just download and run.**
 
 ### Step 1: Download
 Download the latest **`Keyboard Analyzer Setup 1.0.0.exe`** from the [Releases](https://github.com/ShlokRathi29/Keyboard_analysier/releases) page.
@@ -46,11 +45,11 @@ Download the latest **`Keyboard Analyzer Setup 1.0.0.exe`** from the [Releases](
 | **Quit** | Right-click the tray icon → **Quit** |
 | **Reset Data** | Click the "Reset All Data" button in the dashboard |
 
-> ⚠️ **Note:** Your antivirus may flag this app because it monitors keyboard input. This is expected — the app only tracks key counts locally on your PC and never sends data anywhere. You may need to whitelist it.
+**Note:** Your antivirus may flag this app because it monitors keyboard input. This is expected — the app only tracks key counts locally on your PC and never sends data anywhere. You may need to whitelist it.
 
 ---
 
-## 🛠️ Build From Source (For Developers)
+## Build From Source (For Developers)
 
 If you want to build the app yourself or contribute:
 
@@ -92,7 +91,7 @@ pyinstaller --onefile --noconsole --name api --hidden-import uvicorn.logging --h
 
 This creates `main.exe` and `api.exe` inside the `dist/` folder.
 
-> 🧹 After building, you can delete the auto-generated `build/`, `*.spec` files.
+> After building, you can delete the auto-generated `build/`, `*.spec` files.
 
 ### Step 5: Build the UI
 
@@ -120,7 +119,7 @@ The installer will be at: `desktop/release/Keyboard Analyzer Setup 1.0.0.exe`
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Keyboard_analysier/
@@ -140,7 +139,7 @@ Keyboard_analysier/
 
 ---
 
-## 🔧 How It Works
+## How It Works
 
 1. **`main.exe`** — Listens to all keyboard input using `pynput` and saves each keystroke (key + timestamp) to a SQLite database at `%APPDATA%/KeyboardAnalyzer/keystrokes.db`
 2. **`api.exe`** — Runs a FastAPI server on `localhost:8000` that reads the database and calculates WPM, accuracy, error rate, and top keys
@@ -149,7 +148,7 @@ Keyboard_analysier/
 
 ---
 
-## 📊 Stats Explained
+## Stats Explained
 
 | Metric | How It's Calculated |
 |---|---|
@@ -161,7 +160,7 @@ Keyboard_analysier/
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repo
 2. Create a feature branch (`git checkout -b feature/cool-feature`)
@@ -171,7 +170,7 @@ Keyboard_analysier/
 
 ---
 
-## 📄 License
+##  License
 
 ISC License — free to use, modify, and distribute.
 

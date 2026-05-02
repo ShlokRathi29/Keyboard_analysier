@@ -35,6 +35,17 @@ def init_db():
     )
     """)
 
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS settings (
+        key TEXT PRIMARY KEY,
+        value TEXT
+    )
+    """)
+
+    cursor.execute("""
+    INSERT OR IGNORE INTO settings (key, value) VALUES ('paused', '0')
+    """)
+
     conn.commit()
     conn.close()
 
@@ -100,6 +111,37 @@ def reset():
     conn.close()
 
     return {"message": "reset"}
+
+
+@app.get("/tracker-status")
+def tracker_status():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT value FROM settings WHERE key = 'paused'")
+    row = cursor.fetchone()
+    conn.close()
+    paused = row and row[0] == '1'
+    return {"paused": paused}
+
+
+@app.post("/pause")
+def pause():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("UPDATE settings SET value = '1' WHERE key = 'paused'")
+    conn.commit()
+    conn.close()
+    return {"paused": True}
+
+
+@app.post("/resume")
+def resume():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("UPDATE settings SET value = '0' WHERE key = 'paused'")
+    conn.commit()
+    conn.close()
+    return {"paused": False}
 
 
 print("Starting API server...")

@@ -4,6 +4,7 @@ function App() {
   const [stats, setStats] = useState(null);
   const [connected, setConnected] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
+  const [paused, setPaused] = useState(false);
   const prevStats = useRef(null);
 
   useEffect(() => {
@@ -16,6 +17,11 @@ function App() {
           setConnected(true);
         })
         .catch(() => setConnected(false));
+
+      fetch("http://127.0.0.1:8000/tracker-status")
+        .then((res) => res.json())
+        .then((data) => setPaused(data.paused))
+        .catch(() => {});
     }, 1000);
 
     return () => clearInterval(interval);
@@ -31,6 +37,14 @@ function App() {
         console.error(err);
         setIsResetting(false);
       });
+  };
+
+  const handleToggle = () => {
+    const endpoint = paused ? "/resume" : "/pause";
+    fetch(`http://127.0.0.1:8000${endpoint}`, { method: "POST" })
+      .then((res) => res.json())
+      .then((data) => setPaused(data.paused))
+      .catch(console.error);
   };
 
   if (!stats) {
@@ -174,15 +188,31 @@ function App() {
           </div>
         </div>
 
-        {/* Reset Button */}
-        <button
-          className={`reset-btn ${isResetting ? "resetting" : ""}`}
-          onClick={handleReset}
-          disabled={isResetting}
-          id="reset-button"
-        >
-          {isResetting ? "Resetting..." : "🗑️  Reset All Data"}
-        </button>
+        {/* Control Buttons */}
+        <div className="btn-row">
+          <button
+            className={`control-btn toggle-btn ${paused ? "stopped" : "running"}`}
+            onClick={handleToggle}
+            id="toggle-button"
+          >
+            {paused ? "▶  Start Tracking" : "⏸  Stop Tracking"}
+          </button>
+          <button
+            className={`control-btn reset-btn ${isResetting ? "resetting" : ""}`}
+            onClick={handleReset}
+            disabled={isResetting}
+            id="reset-button"
+          >
+            {isResetting ? "Resetting..." : "🗑️  Reset"}
+          </button>
+        </div>
+
+        {/* Paused Banner */}
+        {paused && (
+          <div className="paused-banner">
+            Tracking paused — keystrokes are not being recorded
+          </div>
+        )}
 
         {/* Footer */}
         <div className="footer">
@@ -561,19 +591,60 @@ const styles = `
     font-size: 0.85rem;
   }
 
-  /* Reset Button */
-  .reset-btn {
-    width: 100%;
+  /* Button Row */
+  .btn-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  .control-btn {
+    flex: 1;
     padding: 14px;
-    background: rgba(255, 255, 255, 0.04);
-    color: #94a3b8;
-    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 12px;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
     font-family: 'Inter', sans-serif;
     cursor: pointer;
     transition: all 0.25s ease;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .control-btn:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  .control-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Toggle Button */
+  .toggle-btn.running {
+    background: rgba(251, 191, 36, 0.1);
+    color: #fbbf24;
+    border-color: rgba(251, 191, 36, 0.2);
+  }
+
+  .toggle-btn.running:hover {
+    background: rgba(251, 191, 36, 0.18);
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.1);
+  }
+
+  .toggle-btn.stopped {
+    background: rgba(74, 222, 128, 0.1);
+    color: #4ade80;
+    border-color: rgba(74, 222, 128, 0.2);
+  }
+
+  .toggle-btn.stopped:hover {
+    background: rgba(74, 222, 128, 0.18);
+    box-shadow: 0 0 20px rgba(74, 222, 128, 0.1);
+  }
+
+  /* Reset Button */
+  .reset-btn {
+    background: rgba(255, 255, 255, 0.04);
+    color: #94a3b8;
   }
 
   .reset-btn:hover:not(:disabled) {
@@ -583,13 +654,18 @@ const styles = `
     box-shadow: 0 0 25px rgba(239, 68, 68, 0.1);
   }
 
-  .reset-btn:active:not(:disabled) {
-    transform: scale(0.98);
-  }
-
-  .reset-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+  /* Paused Banner */
+  .paused-banner {
+    text-align: center;
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fbbf24;
+    background: rgba(251, 191, 36, 0.08);
+    border: 1px solid rgba(251, 191, 36, 0.15);
+    animation: fadeIn 0.3s ease;
   }
 
   /* Footer */

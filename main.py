@@ -24,35 +24,65 @@ def init_db():
     )
     """)
 
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS settings (
+        key TEXT PRIMARY KEY,
+        value TEXT
+    )
+    """)
+
+    cursor.execute("""
+    INSERT OR IGNORE INTO settings (key, value) VALUES ('paused', '0')
+    """)
+
     conn.commit()
     conn.close()
+
+
+def is_paused():
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute("SELECT value FROM settings WHERE key = 'paused'")
+        row = cursor.fetchone()
+        conn.close()
+        return row and row[0] == '1'
+    except Exception:
+        return False
 
 
 def on_press(key):
     try:
         k = key.char
-    except:
+    except Exception:
         k = str(key)
 
     if not k:
         return
 
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
+    if is_paused():
+        return
 
-    cursor.execute(
-        "INSERT INTO keystrokes (key, timestamp) VALUES (?, ?)",
-        (k, time.time())
-    )
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
 
-    conn.commit()
-    conn.close()
+        cursor.execute(
+            "INSERT INTO keystrokes (key, timestamp) VALUES (?, ?)",
+            (k, time.time())
+        )
+
+        conn.commit()
+        conn.close()
+    except Exception:
+        # If table doesn't exist yet, recreate it
+        try:
+            init_db()
+        except Exception:
+            pass
 
 
 if __name__ == "__main__":
-    print("Tracker started...")
-    print("DB:", DB_PATH)
-
     init_db()
 
     with keyboard.Listener(on_press=on_press) as listener:

@@ -235,13 +235,12 @@ const styles = `
   }
 
   html, body, #root {
-    height: 100%;
+    min-height: 100%;
     width: 100%;
   }
 
   body {
     background-color: #0a0e1a;
-    overflow: hidden;
   }
 
   .app-wrapper {

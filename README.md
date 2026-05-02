@@ -176,6 +176,6 @@ ISC License — free to use, modify, and distribute.
 
 ---
 
-## 👨‍💻 Author
+## Author
 
 **Shlok Rathi** — [GitHub](https://github.com/ShlokRathi29)
